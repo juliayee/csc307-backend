@@ -1,8 +1,12 @@
 const express = require('express');
 const app = express();
 const port = 5000;
-
+// test
 app.use(express.json());
+
+app.get('/', (req, res) => {
+    res.send('Hello World!');
+});
 
 app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`);
@@ -39,6 +43,10 @@ const users = {
     ]
  }
 
+app.get('/users', (req, res) => {
+    res.send(users);
+ });
+
  app.get('/users/:id', (req, res) => {
     const id = req.params['id']; //or req.params.id
     let result = findUserById(id);
@@ -67,4 +75,14 @@ function findUserById(id) {
 
 const findUserByName = (name) => { 
     return users['users_list'].filter( (user) => user['name'] === name); 
+}
+
+app.delete('/users', (req, res) => {
+    const userToAdd = req.body;
+    addUser(userToAdd);
+    res.status(200).end();
+});
+
+function addUser(user){
+    users['users_list'].splice(user);
 }
