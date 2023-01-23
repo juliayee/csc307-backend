@@ -41,8 +41,21 @@ const users = {
 
 app.get('/users', (req, res) => {
     const name = req.query.name;
+    const job = req.query.job;
+    if (name != undefined && job != undefined){
+        let result1 = findUserByName(name);
+        let result2 = findUserByJob(job);
+        let result = result1 && result2;
+        result = {users_list: result};
+        res.send(result);
+    }
     if (name != undefined){
         let result = findUserByName(name);
+        result = {users_list: result};
+        res.send(result);
+    }
+    if (job != undefined){
+        let result = findUserByJob(job);
         result = {users_list: result};
         res.send(result);
     }
@@ -50,6 +63,14 @@ app.get('/users', (req, res) => {
         res.send(users);
     }
 });
+
+const findUserByName = (name) => { 
+    return users['users_list'].filter( (user) => user['name'] === name); 
+}
+
+const findUserByJob = (job) => { 
+    return users['users_list'].filter( (user) => user['job'] === job); 
+}
 
  app.get('/users/:id', (req, res) => {
     const id = req.params['id']; //or req.params.id
@@ -77,9 +98,7 @@ function findUserById(id) {
     //return users['users_list'].filter( (user) => user['id'] === id);
 }
 
-const findUserByName = (name) => { 
-    return users['users_list'].filter( (user) => user['name'] === name); 
-}
+
 
 app.delete('/users/:id', (req, res) => {
     const userToDelete = req.params['id'];
