@@ -5,10 +5,6 @@ const port = 5000;
 
 app.use(express.json());
 
-app.get('/', (req, res) => {
-    res.send('Hello World!');
-});
-
 app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`);
 });  
@@ -45,8 +41,37 @@ const users = {
  }
 
 app.get('/users', (req, res) => {
-    res.send(users);
- });
+    const name = req.query.name;
+    const job = req.query.job;
+    if (name != undefined && job != undefined){
+        let result1 = findUserByName(name);
+        let result2 = findUserByJob(job);
+        let result = result1 && result2;
+        result = {users_list: result};
+        res.send(result);
+    }
+    if (name != undefined){
+        let result = findUserByName(name);
+        result = {users_list: result};
+        res.send(result);
+    }
+    if (job != undefined){
+        let result = findUserByJob(job);
+        result = {users_list: result};
+        res.send(result);
+    }
+    else{
+        res.send(users);
+    }
+});
+
+const findUserByName = (name) => { 
+    return users['users_list'].filter( (user) => user['name'] === name); 
+}
+
+const findUserByJob = (job) => { 
+    return users['users_list'].filter( (user) => user['job'] === job); 
+}
 
  app.get('/users/:id', (req, res) => {
     const id = req.params['id']; //or req.params.id
@@ -58,7 +83,7 @@ app.get('/users', (req, res) => {
         res.send(result);
     }
 });
- 
+
 app.post('/users', (req, res) => {
     const userToAdd = req.body;
     addUser(userToAdd);
@@ -74,16 +99,22 @@ function findUserById(id) {
     //return users['users_list'].filter( (user) => user['id'] === id);
 }
 
-const findUserByName = (name) => { 
-    return users['users_list'].filter( (user) => user['name'] === name); 
-}
 
-app.delete('/users', (req, res) => {
-    const userToAdd = req.body;
-    addUser(userToAdd);
+
+app.delete('/users/:id', (req, res) => {
+    const userToDelete = req.params['id'];
+    const id = findIndexById(userToDelete);
+    if (i === undefined || i < 0){
+        {res.status(400).end();}
+    }
     res.status(200).end();
 });
 
-function addUser(user){
-    users['users_list'].splice(user);
+function findIndexById(id) {
+    return users['users_list'].findIndex( (user) => user['id'] === id); // or line below
+    //return users['users_list'].filter( (user) => user['id'] === id);
+}
+
+function deleteUser(id){
+    users['users_list'].splice(id, 1);
 }
