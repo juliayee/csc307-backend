@@ -119,11 +119,16 @@ function findUserById(id) {
 
 app.delete('/users/:id', (req, res) => {
     const userToDelete = req.params['id'];
-    const id = findIndexById(userToDelete);
-    if (i === undefined || i < 0){
-        {res.status(404).end();}
+    let id = findUserById(userToDelete);
+    if (id === undefined || id.length == 0){
+        res.status(404).send('Resource not found.').end();
     }
-    res.status(204).end();
+    else{
+        users['users_list'] = users['users_list'].filter((user)=>user['id'] !== id);
+        res.send(id);
+        res.status(204).end();
+    }
+    
 });
 
 function findIndexById(id) {
