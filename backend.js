@@ -87,10 +87,26 @@ const findUserByJob = (job) => {
 });
 
 app.post('/users', (req, res) => {
+    let id = randomID();
+    req.body['id'] = id;
     const userToAdd = req.body;
     addUser(userToAdd);
-    res.status(200).end();
+    res.status(201).send(userToAdd).end();
 });
+
+function randomID(){
+    const az = "abcdefghijklmnopqrstuvwxyz";
+    let letters = "";
+    let numbers = "";
+    for (let i = 0; i < 3; i++) {
+        letters = letters.concat(az[Math.floor(Math.random() * az.length)]);    
+    }
+    for (let i = 0; i < 3; i++) {
+        numbers = numbers.concat(Math.floor(Math.random() * 100).toString);
+    }
+    let id = id.concat(letters, numbers);
+    return id;
+}
 
 function addUser(user){
     users['users_list'].push(user);
@@ -101,15 +117,13 @@ function findUserById(id) {
     //return users['users_list'].filter( (user) => user['id'] === id);
 }
 
-
-
 app.delete('/users/:id', (req, res) => {
     const userToDelete = req.params['id'];
     const id = findIndexById(userToDelete);
     if (i === undefined || i < 0){
-        {res.status(400).end();}
+        {res.status(404).end();}
     }
-    res.status(200).end();
+    res.status(204).end();
 });
 
 function findIndexById(id) {
