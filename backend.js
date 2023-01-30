@@ -102,9 +102,10 @@ function randomID(){
         letters = letters.concat(az[Math.floor(Math.random() * az.length)]);    
     }
     for (let i = 0; i < 3; i++) {
-        numbers = numbers.concat(Math.floor(Math.random() * 100).toString);
+        let n = Math.floor(Math.random() * 10);
+        numbers = numbers + n.toString();
     }
-    let id = id.concat(letters, numbers);
+    let id = letters.concat(numbers);
     return id;
 }
 
@@ -119,13 +120,13 @@ function findUserById(id) {
 
 app.delete('/users/:id', (req, res) => {
     const userToDelete = req.params['id'];
-    let id = findUserById(userToDelete);
-    if (id === undefined || id.length == 0){
+    let userDel = findUserById(userToDelete);
+    if (userDel === undefined || userDel.length == 0){
         res.status(404).send('Resource not found.').end();
     }
     else{
-        users['users_list'] = users['users_list'].filter((user)=>user['id'] !== id);
-        res.send(id);
+        console.log(userDel.id);
+        users['users_list'] = users['users_list'].filter((user)=>user['id'] !== userDel.id);
         res.status(204).end();
     }
     
