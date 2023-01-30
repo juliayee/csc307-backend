@@ -104,9 +104,9 @@ app.delete('/users/:id', (req, res) => {
     const userToDelete = req.params['id'];
     const id = findIndexById(userToDelete);
     if (i === undefined || i < 0){
-        {res.status(400).end();}
+        {res.status(404).end();}
     }
-    res.status(200).end();
+    res.status(204).end();
 });
 
 function findIndexById(id) {
